@@ -4,11 +4,48 @@ import random
 
 # Initialize pygame
 pygame.init()
+def draw_main_menu():
+    screen.fill(BLACK)
+    title_text = font.render('Snake Mini Game', True, GREEN)
+    start_text = button_font.render('Start Game', True, BLACK)
+
+    # Draw Title
+    screen.blit(title_text, (WIDTH//2 - title_text.get_width()//2, HEIGHT//2 - 100))
+
+    # Draw Start Button
+    button_width, button_height = 200, 50
+    button_x = WIDTH // 2 - button_width // 2
+    button_y = HEIGHT // 2
+    button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+    pygame.draw.rect(screen, GRAY, button_rect)
+    pygame.draw.rect(screen, BLUE, button_rect, 3)
+    screen.blit(start_text, (button_x + button_width//2 - start_text.get_width()//2, button_y + button_height//2 - start_text.get_height()//2))
+
+    pygame.display.flip()
+    return button_rect
+
+def main_menu_loop():
+    while True:
+        start_button_rect = draw_main_menu()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button_rect.collidepoint(event.pos):
+                    return  # Exit menu to start game
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                    return  # Allow keyboard start
+
+        pygame.time.wait(20)
 
 # Set up display
 WIDTH, HEIGHT = 800, 800
 CELL_SIZE = 20
 GRID_WIDTH = WIDTH // CELL_SIZE
+INITIAL_SNAKE_LENGTH = 10  # Increased by 2 (original: 3)
+MAIN_MENU = True
 GRID_HEIGHT = HEIGHT // CELL_SIZE
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
